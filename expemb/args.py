@@ -73,4 +73,4 @@ class WandbConfig(Serializable):
 @dataclass
 class TestingResults(Serializable):
     args: TestingArguments
-    accuracy: dict
+    accuracy: List[dict]
