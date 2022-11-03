@@ -1,0 +1,17 @@
+name: expembtx
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pytorch=1.12.1
+  - cudatoolkit=11.3
+  - ca-certificates=2022.9.24
+  - openssl=1.1.1q
+  - pytorch-lightning=1.7.6
+  - wandb=0.13.1
+  - sympy=1.10.1
+  - certifi=2022.9.24
+  - simple-parsing=0.0.20
+  - ipython
+  - scipy=1.9.1
+prefix: /home/neerajgangwar/.miniforge/envs/expembtx

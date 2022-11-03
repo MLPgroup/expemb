@@ -142,3 +142,4 @@ SEMVEC_SYMPY_OPERATORS = {
     sp.Mul: "multiply",
     sp.Add: "subtract",
 }
+SEMVEC_SCORE_MODES = ["max"]

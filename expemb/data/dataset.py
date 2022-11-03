@@ -36,7 +36,7 @@ class ExpressionTupleDataset(Dataset):
 
             ip_len = len(ip_eq.split(" "))
             op_len = len(op_eq.split(" "))
-            if max_seq_len == -1: 
+            if max_seq_len == -1:
                 self.eq_tuples.append((ip_eq, op_eq))
             elif ip_len <= max_seq_len and op_len <= max_seq_len:
                 self.eq_tuples.append((ip_eq, op_eq))
@@ -73,3 +73,84 @@ class ExpressionTupleDataset(Dataset):
             sent[0:lengths[i], i] = s
 
         return sent
+
+
+class ExpressionDataset(Dataset):
+    def __init__(self, filepath: str, tokenizer: Tokenizer, n_examples: int = -1, max_seq_len: int = -1):
+        super(ExpressionDataset, self).__init__()
+
+        assert os.path.exists(filepath), f"{filepath} does not exist"
+        self.filepath = filepath
+        self.tokenizer = tokenizer
+
+        print(f"Reading {n_examples} training examples from {self.filepath}")
+
+        self.exp_list = set()
+        if filepath.endswith(".gz"):
+            file = gzip.open(filepath, "rt")
+        else:
+            file = open(filepath, "r", encoding="utf-8")
+
+        skipped = 0
+        for idx, line in enumerate(file):
+            if idx == n_examples:
+                break
+
+            line = line.strip()
+            for exp in line.split("\t"):
+                exp_len = len(exp.split(" "))
+                if max_seq_len == -1:
+                    self.exp_list.add(exp)
+                elif exp_len <= max_seq_len:
+                    self.exp_list.add(exp)
+                else:
+                    skipped += 1
+
+        self.exp_list = list(self.exp_list)
+        print(f"Skipped {skipped} lines due to max sequence length restriction.")
+        file.close()
+
+
+    def __len__(self) -> int:
+        return len(self.exp_list)
+
+
+    def __getitem__(self, idx: int) -> tuple:
+        exp = self.exp_list[idx]
+        tensor = self.tokenizer.encode(exp)
+        return tensor, exp
+
+
+    def collate_fn(self, sequences: tuple) -> tuple:
+        exp_tensor, exps = zip(*sequences)
+        exp_tensor = self.batch_sequence(exp_tensor)
+        return exp_tensor, exps
+
+
+    def batch_sequence(self, sequences: tuple) -> tuple:
+        lengths = [len(s) for s in sequences]
+        sent = torch.LongTensor(max(lengths), len(lengths)).fill_(self.tokenizer.get_pad_index())
+
+        for i, s in enumerate(sequences):
+            sent[0:lengths[i], i] = s
+
+        return sent
+
+
+class FileNameDataset(Dataset):
+    def __init__(self, full_datafile, test_datafile):
+        super(FileNameDataset, self).__init__()
+        self.full_datafile = full_datafile
+        self.test_datafile = test_datafile
+
+
+    def __len__(self):
+        return 1
+
+
+    def __getitem__(self, idx):
+        return self.full_datafile, self.test_datafile
+
+
+    def collate_fn(self, sequences: tuple):
+        return sequences

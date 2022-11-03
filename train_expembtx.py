@@ -1,30 +1,29 @@
-import argparse
-import pytorch_lightning as pl
-from torch.utils.data import DataLoader
+import os
 from expemb import (
-    ExpressionTupleDataset,
-    ExpEmbTx,
-    EquivExpTokenizer,
+    TxTrainer,
+    SemVecTxTrainer,
+    TxModelArguments,
+    TrainingArguments,
 )
+from simple_parsing import ArgumentParser
 
 
 def main():
-    tokenizer = EquivExpTokenizer()
-    train_dataset = ExpressionTupleDataset("./data/prim_fwd_5_ops.train.gz", tokenizer = tokenizer, max_seq_len = 512)
-    train_dataloder = DataLoader(train_dataset, batch_size = 64, collate_fn = train_dataset.collate_fn)
-    logger = pl.loggers.WandbLogger(name = "test", project = "expembtx")
-    model = ExpEmbTx(
-        vocab_size = tokenizer.n_comp,
-        padding_idx = tokenizer.get_pad_index(),
-    )
-    trainer = pl.Trainer(
-        accelerator = "auto",
-        max_epochs = 20,
-        track_grad_norm = 2,
-        logger = logger,
-    )
-    trainer.fit(model, train_dataloder)
+    # Command line arguments
+    arg_parser = ArgumentParser("ExpEmb-TX training script")
+    arg_parser.add_arguments(TxModelArguments, dest = "model")
+    arg_parser.add_arguments(TrainingArguments, dest = "train")
+    args = arg_parser.parse_args()
+    model_args, train_args = args.model, args.train
+
+    if train_args.semvec:
+        trainer = SemVecTxTrainer(model_args = model_args, train_args = train_args)
+    else:
+        trainer = TxTrainer(model_args = model_args, train_args = train_args)
+
+    trainer.run_training()
 
 
 if __name__ == "__main__":
+    os.environ["WANDB_SILENT"] = "true"
     main()
