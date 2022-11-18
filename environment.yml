@@ -1,10 +1,12 @@
 name: expembtx
 channels:
   - conda-forge
+  - nvidia
+  - pytorch
 dependencies:
   - python=3.9
-  - pytorch=1.12.1
-  - cudatoolkit=11.3
+  - pytorch::pytorch=1.12.1
+  - nvidia::cudatoolkit<=11.6
   - ca-certificates=2022.9.24
   - openssl=1.1.1q
   - pytorch-lightning=1.7.6
