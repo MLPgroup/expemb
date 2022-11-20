@@ -180,6 +180,7 @@ class TxTrainer:
             strategy = pl.strategies.ddp.DDPStrategy(find_unused_parameters = False),
             precision = self.train_args.precision,
             min_epochs = self.train_args.n_min_epochs,
+            deterministic = True,
         )
         trainer.fit(model, train_dataloder, val_dataloader, ckpt_path = checkpoint_path)
 
