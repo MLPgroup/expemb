@@ -75,9 +75,10 @@ class ExpEmbTx(pl.LightningModule):
         weight_decay: float = 0.0,
         beam_sizes: list = [],
         sympy_timeout: int = 2,
-        is_bool_dataset: bool = False,
+        bool_dataset: bool = False,
         activation: str = "relu",
         label_smoothing: float = 0.0,
+        autoencoder: bool = False,
     ):
         super(ExpEmbTx, self).__init__()
         self.model_type = "ExpEmb-TX"
@@ -94,7 +95,8 @@ class ExpEmbTx(pl.LightningModule):
         self.max_out_len = max_out_len
         self.vocab_size = vocab_size
         self.sympy_timeout = sympy_timeout
-        self.is_bool_dataset = is_bool_dataset
+        self.bool_dataset = bool_dataset
+        self.autoencoder = autoencoder
         # Only used in test_step
         self.beam_sizes = beam_sizes
 
@@ -211,10 +213,11 @@ class ExpEmbTx(pl.LightningModule):
             encoded.append(tensor)
             lens.append(tensor.size(0))
 
-        src = torch.empty(max(lens), len(lens), dtype = torch.long).fill_(self.padding_idx)
+        src = torch.empty(max(lens), len(lens), dtype = torch.long, device = self.device).fill_(self.padding_idx)
+        emb_mask = torch.zeros(max(lens), len(lens), dtype = torch.bool, device = self.device)
         for idx, curlen in enumerate(lens):
             src[:curlen, idx] = encoded[idx]
-        src = src.to(self.device)
+            emb_mask[1:curlen - 1, idx] = True
 
         src_mask, src_padding_mask = self.create_src_mask(src)
         memory = self.encode(src, src_mask, src_padding_mask)
@@ -226,16 +229,13 @@ class ExpEmbTx(pl.LightningModule):
             logits = None
 
         if mode == "mean":
-            memory[src_padding_mask.T] = 0.
-            embedding = memory[1:-1]
-            embedding = embedding.sum(dim = 0, keepdim = False)
-            size = ~src_padding_mask
-            size = size[:, 1:-1].sum(dim = 1, keepdim = True)
-            embedding = embedding / size
+            memory[~emb_mask] = 0.
+            embedding = memory.sum(dim = 0, keepdim = False)
+            size = emb_mask.sum(dim = 0, keepdim = True)
+            embedding = embedding / size.T
         elif mode == "max":
-            memory[src_padding_mask.T] = float("-inf")
-            embedding = memory[1:-1]
-            embedding, _ = embedding.max(dim = 0, keepdim = False)
+            memory[~emb_mask] = float("-inf")
+            embedding, _ = memory.max(dim = 0, keepdim = False)
         elif mode == "decoder":
             embedding = logits[0]
         else:
@@ -335,7 +335,10 @@ class ExpEmbTx(pl.LightningModule):
                 predicted_prefix = self.tokenizer.decode(tensor, True)
                 predicted_prefix = " ".join(predicted_prefix.split(" ")[1:-1])
                 predicted_sp = self.prefix_to_sympy(predicted_prefix)
-                equivalent = src_prefix != predicted_prefix and self.are_equivalent(src_sp, predicted_sp)
+                if self.autoencoder:
+                    equivalent = src_prefix == predicted_prefix
+                else:
+                    equivalent = src_prefix != predicted_prefix and self.are_equivalent(src_sp, predicted_sp)
                 if equivalent:
                     correct += 1
             except Exception as e:
@@ -361,7 +364,11 @@ class ExpEmbTx(pl.LightningModule):
                 for predicted_prefix in predicted_prefix_list:
                     try:
                         predicted_spexp = self.prefix_to_sympy(predicted_prefix)
-                        equivalent = equivalent or (src_prefix != predicted_prefix and self.are_equivalent(src_spexp, predicted_spexp))
+                        if self.autoencoder:
+                            equivalent = equivalent or (src_prefix == predicted_prefix)
+                        else:
+                            equivalent = equivalent or (src_prefix != predicted_prefix and self.are_equivalent(src_spexp, predicted_spexp))
+
                         if equivalent:
                             break
                     except Exception as e:
@@ -597,8 +604,8 @@ class ExpEmbTx(pl.LightningModule):
         def _are_equivalent_bool(exp1, exp2):
             return not sp.logic.boolalg.simplify_logic(exp1 ^ exp2)
 
-        return (self.is_bool_dataset and _are_equivalent_bool(exp1, exp2)) or \
-            (not self.is_bool_dataset and _are_equivalent_poly(exp1, exp2))
+        return (self.bool_dataset and _are_equivalent_bool(exp1, exp2)) or \
+            (not self.bool_dataset and _are_equivalent_poly(exp1, exp2))
 
 
     def on_save_checkpoint(self, checkpoint) -> None:

@@ -146,10 +146,11 @@ class TxTrainer:
             norm_first = self.model_args.norm_first,
             max_out_len = self.train_args.max_out_len,
             sympy_timeout = self.train_args.sympy_timeout,
-            is_bool_dataset = False,
+            bool_dataset = False,
             activation = self.model_args.activation,
             label_smoothing = self.train_args.label_smoothing,
             weight_decay = self.train_args.weight_decay,
+            autoencoder = self.train_args.autoencoder,
         )
 
 
@@ -256,8 +257,9 @@ class SemVecTxTrainer(TxTrainer):
             norm_first = self.model_args.norm_first,
             max_out_len = self.train_args.max_out_len,
             sympy_timeout = self.train_args.sympy_timeout,
-            is_bool_dataset = self.train_args.is_bool_dataset,
+            bool_dataset = self.train_args.bool_dataset,
             activation = self.model_args.activation,
             label_smoothing = self.train_args.label_smoothing,
             weight_decay = self.train_args.weight_decay,
+            autoencoder = self.train_args.autoencoder,
         )

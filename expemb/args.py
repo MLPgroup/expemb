@@ -43,8 +43,9 @@ class TrainingArguments(Serializable):
     early_stopping: Optional[int] = None         # If provided, the early stopping callback is enabled with patience as the value of this argument.
     semvec: bool = False                         # If job is being run for one of the SemVec datasets.
     n_min_epochs: Optional[int] = None           # Force training to atleast these many epochs (optionally to be used with early_stopping).
-    is_bool_dataset: bool = False                # If the dataset consists of boolean expressions.
+    bool_dataset: bool = False                   # If the dataset consists of boolean expressions.
     label_smoothing: float = 0.0                 # Label smoothing to use while computing loss.
+    autoencoder: bool = False                    # If it should be run as autoencoder.
 
 
 @dataclass
@@ -61,7 +62,17 @@ class TestingArguments(Serializable):
     max_test_examples: int = -1                  # Maximum number of examples to read from the file.
     precision: int = 16                          # Precision to use for training.
     semvec: bool = False                         # If job is being run for one of the SemVec datasets.
-    is_bool_dataset: bool = False                # If the dataset consists of boolean expressions.
+
+
+@dataclass
+class EmbMathArguments(Serializable):
+    """Embedding mathematics arguments"""
+    train_file: str                              # File used for training the model.
+    save_dir: str                                # Saved model directory. Results will also be stored in this directory.
+    test_file: str                               # Test file path.
+    model_cls: str = "ExpEmbTx"                  # Model class. Only ExmEmbTx is supported.
+    ckpt_name: str = "best"                      # Specify the ckpt name to test.
+    batch_size: int = 1024                       # Batch size to use while computing embedding.
 
 
 @dataclass
