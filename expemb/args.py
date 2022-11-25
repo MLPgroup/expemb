@@ -25,6 +25,7 @@ class TrainingArguments(Serializable):
     project_name: Optional[str] = None           # Project name for Wandb.
     max_seq_len: int = 512                       # Maximum sequence length. Expressions longer than this value will be skipped.
     max_out_len: int = 100                       # Maximum length to use during decoding.
+    max_n_pos: int = 1024                        # Max length for positional embedding.
     max_train_examples: int = -1                 # Maximum number of training examples to read from the file.
     max_val_examples: int = -1                   # Maximum number of validation examples to read from the file.
     seed: Optional[int] = None                   # Random seed value.

@@ -139,7 +139,6 @@ class TxTrainer:
             vocab_size = tokenizer.n_comp,
             dim_feedforward = self.model_args.dim_feedforward,
             dropout = self.model_args.dropout,
-            max_seq_len = self.train_args.max_seq_len,
             optim = self.train_args.optim,
             lr = self.train_args.lr,
             tokenizer = tokenizer,
@@ -151,6 +150,7 @@ class TxTrainer:
             label_smoothing = self.train_args.label_smoothing,
             weight_decay = self.train_args.weight_decay,
             autoencoder = self.train_args.autoencoder,
+            max_n_pos = self.train_args.max_n_pos,
         )
 
 
@@ -250,7 +250,6 @@ class SemVecTxTrainer(TxTrainer):
             vocab_size = tokenizer.n_comp,
             dim_feedforward = self.model_args.dim_feedforward,
             dropout = self.model_args.dropout,
-            max_seq_len = self.train_args.max_seq_len,
             optim = self.train_args.optim,
             lr = self.train_args.lr,
             tokenizer = tokenizer,
@@ -262,4 +261,5 @@ class SemVecTxTrainer(TxTrainer):
             label_smoothing = self.train_args.label_smoothing,
             weight_decay = self.train_args.weight_decay,
             autoencoder = self.train_args.autoencoder,
+            max_n_pos = self.train_args.max_n_pos,
         )

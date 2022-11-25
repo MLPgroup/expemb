@@ -68,7 +68,6 @@ class ExpEmbTx(pl.LightningModule):
         layer_norm_eps: float = 1e-5,
         batch_first: bool = False,
         norm_first: bool = True,
-        max_seq_len: int = 1000,
         max_out_len: int = 100,
         optim: str = "Adam",
         lr: float = 0.0001,
@@ -79,6 +78,7 @@ class ExpEmbTx(pl.LightningModule):
         activation: str = "relu",
         label_smoothing: float = 0.0,
         autoencoder: bool = False,
+        max_n_pos: int = 1024,
     ):
         super(ExpEmbTx, self).__init__()
         self.model_type = "ExpEmb-TX"
@@ -91,17 +91,17 @@ class ExpEmbTx(pl.LightningModule):
         self.padding_idx = tokenizer.get_pad_index()
         self.soe_idx = tokenizer.get_soe_index()
         self.eoe_idx = tokenizer.get_eoe_index()
-        self.max_seq_len = max_seq_len
         self.max_out_len = max_out_len
         self.vocab_size = vocab_size
         self.sympy_timeout = sympy_timeout
         self.bool_dataset = bool_dataset
         self.autoencoder = autoencoder
+        self.max_n_pos = max_n_pos
         # Only used in test_step
         self.beam_sizes = beam_sizes
 
         self.token_embedding = TokenEmbedding(vocab_size = vocab_size, emb_size = emb_size)
-        self.positional_encoding = PositionalEncoding(emb_size = emb_size, dropout = dropout, maxlen = max_seq_len)
+        self.positional_encoding = PositionalEncoding(emb_size = emb_size, dropout = dropout, maxlen = max_n_pos)
         decoder_layer = CausalTransformerDecoderLayer(
             d_model = emb_size,
             nhead = n_heads,
