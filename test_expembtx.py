@@ -57,7 +57,7 @@ def main():
 
     # Save results
     results = TestingResults(args = args, accuracy = test_results)
-    results_file = os.path.join(args.save_dir, f"results-{datetime.now().strftime('%Y%m%d-%H%M%S%f')}.yaml")
+    results_file = os.path.join(args.save_dir, f"{args.result_file_prefix}-{datetime.now().strftime('%Y%m%d-%H%M%S%f')}.yaml")
     results.save(results_file)
 
 

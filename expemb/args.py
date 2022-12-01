@@ -63,6 +63,7 @@ class TestingArguments(Serializable):
     max_test_examples: int = -1                  # Maximum number of examples to read from the file.
     precision: int = 16                          # Precision to use for training.
     semvec: bool = False                         # If job is being run for one of the SemVec datasets.
+    result_file_prefix: str = "results"          # Prefix to use in the test result file name.
 
 
 @dataclass
