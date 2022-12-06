@@ -1,0 +1,5 @@
+outs:
+- md5: 282ee34aee58a4942ef3c87b573a40f6.dir
+  size: 42370304
+  nfiles: 25
+  path: poly8

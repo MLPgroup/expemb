@@ -1,0 +1,5 @@
+outs:
+- md5: 6661f56b29ff0305b79607172b583d81.dir
+  size: 148945325
+  nfiles: 25
+  path: oneVarPoly10

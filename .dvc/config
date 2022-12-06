@@ -1,0 +1,5 @@
+[core]
+    remote = ngdrive
+    autostage = true
+['remote "ngdrive"']
+    url = gdrive://1WQr0kbuQFH3I7FoA7y_rq6DZNefkfDgu
