@@ -51,7 +51,11 @@ def main():
     logger = pl.loggers.CSVLogger(save_dir = args.save_dir, name = "test_logs")
 
     # Test
-    trainer = pl.Trainer(accelerator = "auto", precision = args.precision, logger = logger)
+    if args.semvec:
+        trainer = pl.Trainer(accelerator = "auto", devices = 1, precision = args.precision, logger = logger)
+    else:
+        trainer = pl.Trainer(accelerator = "auto", precision = args.precision, logger = logger)
+
     test_results = trainer.test(model = model, dataloaders = dataloader)
     print(f"test_results: {test_results}")
 
