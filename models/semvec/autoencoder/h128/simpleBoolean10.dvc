@@ -1,5 +1,5 @@
 outs:
-- md5: b8c28275d47c87838fa9eb8972965cba.dir
-  size: 99709204
-  nfiles: 25
+- md5: 42f15daf5caea4210ad80e0a4ea53716.dir
+  size: 99710169
+  nfiles: 28
   path: simpleBoolean10

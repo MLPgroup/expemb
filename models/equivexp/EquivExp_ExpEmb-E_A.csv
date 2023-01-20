@@ -1,0 +1,3 @@
+Dataset,Training Set Size,Min Steps,Max Steps,Wait Steps,Batch Size,Steps / Epoch,Min Epochs,Max Epochs,Wait Epochs,Env Variable,Comments
+ExpEmb-E,"4,662,300","300,000","1,000,000","30,000",256,18213,17,55,2,"DATASET=ExpEmb-E,EPOCHS=55,N_MIN_EPOCHS=17,EARLY_STOPPING=2",Used 5 as wait epochs for early stopping
+ExpEmb-A,"2,744,824","300,000","1,000,000","30,000",256,10722,28,94,3,"DATASET=ExpEmb-A,EPOCHS=94,N_MIN_EPOCHS=28,EARLY_STOPPING=3",Used 5 as wait epochs for early stopping

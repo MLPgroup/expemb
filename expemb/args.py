@@ -78,6 +78,17 @@ class EmbMathArguments(Serializable):
 
 
 @dataclass
+class DistanceAnalysisArguments(Serializable):
+    """Embedding mathematics arguments"""
+    train_file: str                              # File used for training the model.
+    save_dir: str                                # Saved model directory. Results will also be stored in this directory.
+    test_file: str                               # Test file path.
+    model_cls: str = "ExpEmbTx"                  # Model class. Only ExmEmbTx is supported.
+    ckpt_name: str = "best"                      # Specify the ckpt name to test.
+    batch_size: int = 1024                       # Batch size to use while computing embedding.
+
+
+@dataclass
 class WandbConfig(Serializable):
     id: str
     name: str
