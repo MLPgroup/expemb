@@ -8,7 +8,7 @@ from typing import List
 from datetime import datetime
 from scipy.spatial.distance import cdist
 from tqdm import tqdm
-from expemb import ExpEmbTx
+from expemb import ExpEmbTx, TrainingArguments
 
 
 class EmbeddingMathematics:
@@ -28,6 +28,9 @@ class EmbeddingMathematics:
         self.test_file = test_file
         self.batch_size = batch_size
         self.k = 1
+
+        train_args = TrainingArguments.load(os.path.join(self.save_dir, "train_args.yaml"))
+        self.max_seq_len = train_args.max_seq_len
 
         self.test_examples = self.load_test_examples()
         self.model = self.load_model()
@@ -54,7 +57,7 @@ class EmbeddingMathematics:
 
     def load_test_examples(self):
         test_examples = []
-        with open(self.test_file, "r") as f:
+        with gzip.open(self.test_file, "rt") as f:
             csvreader = csv.DictReader(f, delimiter = ",")
             for row in csvreader:
                 test_examples.append({
@@ -75,7 +78,7 @@ class EmbeddingMathematics:
             for line in f:
                 line = line.strip()
                 for exp in line.split("\t"):
-                    if len(exp.split(" ")) <= self.model.max_seq_len:
+                    if len(exp.split(" ")) <= self.max_seq_len:
                         exp_list.add(exp)
 
         # Expressions from test examples

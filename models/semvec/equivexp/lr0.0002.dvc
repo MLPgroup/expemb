@@ -1,0 +1,5 @@
+outs:
+- md5: bb37e19b7b7b1b1e4609910aa0cd6558.dir
+  size: 183075870
+  nfiles: 19
+  path: lr0.0002
