@@ -17,4 +17,4 @@ dependencies:
   - ipython
   - notebook=6.5.2
   - scipy=1.9.1
-prefix: /home/neerajgangwar/.miniforge/envs/expembtx
+prefix: ~/.miniforge/envs/expembtx
