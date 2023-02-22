@@ -1,0 +1,5 @@
+outs:
+- md5: 65fb5c07197110ef151307e8af764203.dir
+  size: 50135271
+  nfiles: 19
+  path: largeSimpleBoolean5
