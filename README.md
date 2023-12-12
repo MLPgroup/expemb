@@ -103,7 +103,7 @@ python run_distance_analysis.py \
 For all supported options, use `python run_embmath.py --help` or refer to [DistanceAnalysisArguments](expemb/args.py#DistanceAnalysisArguments).
 
 ## Embedding Plots
-For embedding plots, refer to [embedding_plots.ipynb](notebooks/embedding_plots.ipynb). The interactive plots can be seen on the below links:
+For embedding plots, refer to [embedding_plots.ipynb](notebooks/embedding_plots.ipynb). Interactive versions of the embedding plots from the paper can be seen on the below links:
 1. [StructEmb](https://mlpgroup.github.io/expemb/emb_plots/structemb_pca_plot.html)
 2. [SemEmb](https://mlpgroup.github.io/expemb/emb_plots/sememb_pca_plot.html)
 
