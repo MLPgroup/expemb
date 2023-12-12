@@ -8,10 +8,11 @@ from tqdm import tqdm
 
 
 class DatasetGenerator:
-    def __init__(self, srcdir: str, outdir: str, dataset: str):
+    def __init__(self, srcdir: str, outdir: str, dataset: str, n_examples: int):
         self.srcdir = srcdir
         self.outdir = outdir
         self.dataset = dataset
+        self.n_examples = n_examples
 
         assert os.path.exists(self.srcdir) and os.path.exists(self.outdir)
 
@@ -40,7 +41,11 @@ class DatasetGenerator:
 
 
     def run(self):
-        n_examples = self.n_expemba_examples()
+        if self.n_examples is None:
+            n_examples = self.n_expemba_examples()
+        else:
+            n_examples = self.n_examples
+
         examples = self.sample_from_expembe(n_examples)
         self.write_to_file(examples)
 
@@ -51,6 +56,7 @@ class DatasetGenerationAgruments:
     outdir: str                      # Output directory.
     dataset: List[str]               # List of datasets to process.
     seed: int = Optional[None]       # Seed.
+    n_examples: int = Optional[None] # Number of examples to sample to create the new dataset.
 
 
 if __name__ == "__main__":
@@ -64,5 +70,5 @@ if __name__ == "__main__":
         random.seed(args.seed)
 
     for dataset in tqdm(args.dataset):
-        generator = DatasetGenerator(args.srcdir, args.outdir, dataset)
+        generator = DatasetGenerator(args.srcdir, args.outdir, dataset, args.n_examples)
         generator.run()
