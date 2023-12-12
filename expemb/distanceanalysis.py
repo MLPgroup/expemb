@@ -123,7 +123,7 @@ class DistanceAnalysis:
         results_file = os.path.join(self.save_dir, f"dist_analysis_results_{datetime.now().strftime('%Y%m%d-%H%M%S%f')}.json")
 
         results = {}
-        for example in self.test_examples:
+        for example in tqdm(self.test_examples):
             assert example in exp_list, f"{example['x2']} is not present in the expression list."
 
             nns = self.find_nearest_neighbors(

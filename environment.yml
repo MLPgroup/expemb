@@ -17,4 +17,6 @@ dependencies:
   - ipython
   - notebook=6.5.2
   - scipy=1.9.1
+  - pip:
+      - zss==1.2.0
 prefix: ~/.miniforge/envs/expembtx

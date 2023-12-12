@@ -308,18 +308,13 @@ class ExpEmbTx(pl.LightningModule):
         src, _ = batch
         accuracy = self.compute_accuracy(batch)
         self.log("val/accuracy", accuracy, on_epoch = True, batch_size = src.size(1), sync_dist = True)
-        return accuracy
 
 
     def test_step(self, batch: tuple, batch_idx: int):
         src, _ = batch
-        accuracy_dict = {}
         for beam_size in self.beam_sizes:
             accuracy = self.compute_accuracy_beam(batch, beam_size)
             self.log(f"test/accuracy_{beam_size}", accuracy, on_epoch = True, batch_size = src.size(1), sync_dist = True)
-            accuracy_dict[beam_size] = accuracy
-
-        return accuracy
 
 
     def compute_accuracy(self, batch: Tensor):
