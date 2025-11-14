@@ -109,3 +109,17 @@ For embedding plots, refer to [embedding_plots.ipynb](notebooks/embedding_plots.
 
 ## Weights & Biases (wandb) Integration
 This repository supports wandb integration. To start using it, login to wandb using `wandb login`. To disable wandb, set the environment variable `WANDB_MODE=offline`.
+
+## Citation
+If you find our work useful, please consider citing it.
+```
+@article{gangwar2023semantic,
+    title={Semantic Representations of Mathematical Expressions in a Continuous Vector Space},
+    author={Neeraj Gangwar and Nickvash Kani},
+    journal={Transactions on Machine Learning Research},
+    issn={2835-8856},
+    year={2023},
+    url={https://openreview.net/forum?id=EWPA9TZcUy},
+    note={}
+}
+```
